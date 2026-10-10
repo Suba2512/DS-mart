@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Mart - Data Structures Game</title>
+    <meta name="description" content="An interactive shopping game demonstrating Stack, Linked List, and Queue data structures implemented in C.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- OS Window Container (Matches Desktop Screenshot Style) -->
+    <div class="window-container">
+        <!-- Top OS Window Bar -->
+        <div class="window-title-bar">
+            <div class="window-title-left">
+                <span class="window-app-icon">🛒</span>
+                <span id="windowTitleText">DS Mart - Data Structures Game</span>
+            </div>
+            <div class="window-controls">
+                <span class="win-btn" title="Minimize">—</span>
+                <span class="win-btn" id="btnToggleFullscreen" title="Toggle Fullscreen">□</span>
+                <span class="win-btn close" title="Close">✕</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SCREEN 1: LANDING VIEW (Screenshot 2 Match)
+             ========================================== -->
+        <div id="landingView" class="screen-view landing-view">
+            <div class="landing-overlay"></div>
+
+            <!-- Left Pillar -->
+            <div class="landing-side-pillar left">
+                <div class="pillar-text-line1">Fresh Food</div>
+                <div class="pillar-text-line2">Better Life</div>
+            </div>
+
+            <!-- Center Box -->
+            <div class="landing-center-box">
+                <div class="ds-mart-logo-wrap">
+                    <div class="ds-logo-text">
+                        <span class="ds-logo-gold">DS</span>
+                        <span class="ds-logo-white">MART</span>
+                    </div>
+                    <!-- Wire shopping cart icon SVG -->
+                    <svg class="ds-cart-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="20" r="1.5"></circle>
+                        <circle cx="18" cy="20" r="1.5"></circle>
+                        <path d="M2.5 3h3l2.4 12.5a2 2 0 0 0 2 1.5h8.8a2 2 0 0 0 2-1.6l1.8-8.4H6.5"></path>
+                        <path d="M9 8h12"></path>
+                        <path d="M9 12h10"></path>
+                    </svg>
+                </div>
+
+                <div class="landing-subtitle-pill">
+                    An Interactive Data Structures Shopping Game
+                </div>
+
+                <div class="landing-buttons-stack">
+                    <button id="btnPlayGame" class="landing-btn">Play Game</button>
+                    <button id="btnInstructions" class="landing-btn">Instructions</button>
+                    <button id="btnExitLanding" class="landing-btn">Exit</button>
+                </div>
+            </div>
+
+            <!-- Right Pillar -->
+            <div class="landing-side-pillar right">
+                <div class="pillar-text-line1">Welcome to</div>
+                <div class="pillar-text-line2">DS Mart</div>
+            </div>
+
+            <!-- Plant on bottom-left -->
+            <div class="landing-prop-plant">
+                <svg width="48" height="60" viewBox="0 0 48 60">
+                    <path d="M14 38 L34 38 L30 58 L18 58 Z" fill="#b45309"></path>
+                    <ellipse cx="24" cy="28" rx="8" ry="16" fill="#15803d"></ellipse>
+                    <ellipse cx="16" cy="30" rx="9" ry="14" transform="rotate(-25 16 30)" fill="#16a34a"></ellipse>
+                    <ellipse cx="32" cy="30" rx="9" ry="14" transform="rotate(25 32 30)" fill="#22c55e"></ellipse>
+                </svg>
+            </div>
+
+            <!-- Shopping cart on bottom-right -->
+            <div class="landing-prop-cart">
+                <svg width="88" height="74" viewBox="0 0 88 74" fill="none" stroke="#94a3b8" stroke-width="2.5">
+                    <circle cx="28" cy="65" r="5" fill="#334155"></circle>
+                    <circle cx="68" cy="65" r="5" fill="#334155"></circle>
+                    <path d="M8 12 h14 l12 40 h40 l10 -30 h-60" stroke="#cbd5e1"></path>
+                    <path d="M34 22 h42 M37 32 h36 M40 42 h30" stroke="#94a3b8" stroke-width="1.8"></path>
+                    <path d="M12 12 h8" stroke="#ef4444" stroke-width="5" stroke-linecap="round"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SCREEN 2: SUPERMARKET VIEW (Screenshot 1 Match)
+             ========================================== -->
+        <div id="supermarketView" class="screen-view supermarket-view">
+            <!-- Top HUD Bar -->
+            <div class="supermarket-hud-bar">
+                <div class="hud-lives-group">
+                    <span id="hudHearts" class="hud-hearts-icons">❤️❤️❤️</span>
+                    <span class="hud-lives-text">Lives: <span id="hudLivesCount">3</span></span>
+                </div>
+                <div class="hud-score-group">
+                    Score: <span id="hudScore" class="hud-score-val">0</span>
+                </div>
+                <div class="hud-level-group">
+                    Level: <span id="hudLevel" class="hud-level-val">1</span>
+                </div>
+            </div>
+
+            <!-- Main Supermarket Canvas -->
+            <div class="supermarket-canvas-wrapper">
+                <canvas id="gameCanvas"></canvas>
+
+                <!-- Top-Right Minimap Radar (Matches Screenshot 1) -->
+                <div class="minimap-radar-container">
+                    <canvas id="minimapCanvas"></canvas>
+                </div>
+
+                <!-- Floating C Engine Button -->
+                <button id="btnToggleCEngine" class="c-engine-toggle-btn">
+                    <span>⚡</span> Live C Engine & Memory
+                </button>
+
+                <!-- Bottom-Left EXIT Button (Matches Screenshot 1) -->
+                <button id="btnSupermarketExit" class="supermarket-exit-btn">EXIT</button>
+
+                <!-- On-Screen Touch / D-pad Controls for Cute Boy -->
+                <div class="virtual-dpad" id="virtualDpad">
+                    <button class="dpad-btn up" id="dpadUp" title="Move Up">▲</button>
+                    <div class="dpad-mid-row">
+                        <button class="dpad-btn left" id="dpadLeft" title="Move Left">◀</button>
+                        <button class="dpad-btn action" id="dpadAction" title="Interact / Collect (E)">E</button>
+                        <button class="dpad-btn right" id="dpadRight" title="Move Right">▶</button>
+                    </div>
+                    <button class="dpad-btn down" id="dpadDown" title="Move Down">▼</button>
+                </div>
+
+                <!-- Bottom-Right Trolley (Stack) Card (Matches Screenshot 1) -->
+                <div class="trolley-hud-card">
+                    <div class="trolley-col-stack">
+                        <div class="trolley-label">Trolley (Stack)</div>
+                        <div id="trolleyStackPreview" class="trolley-preview-box">
+                            <span class="empty-stack-text">- Empty</span>
+                        </div>
+                        <div class="trolley-actions-strip">
+                            <button id="btnPopCart" class="hud-micro-btn pop-btn" title="Remove topmost product (LIFO)">Pop [P]</button>
+                            <button id="btnInspectCart" class="hud-micro-btn" title="Inspect Linked List Pointers">Linked List</button>
+                        </div>
+                    </div>
+                    <div class="trolley-col-count">
+                        <div class="products-label">Products</div>
+                        <div id="trolleyProductCount" class="products-val">0 / 8</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Toast Notification -->
+    <div id="gameToast" class="game-toast"></div>
+
+    <!-- ==========================================
+         MODALS
+         ========================================== -->
+
+    <!-- Instructions Modal -->
+    <div id="instructionsModal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">📖 DS Mart - Game Rules & Guide</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="instructions-section">
+                    <h4>📦 1. Trolley = Stack (LIFO)</h4>
+                    <p>Every product you pick up is pushed onto your shopping trolley using the C <code>stack_push()</code> function. The last item you took is at the top of the stack and can be removed first using <code>stack_pop()</code>.</p>
+                </div>
+                <div class="instructions-section">
+                    <h4>🔗 2. Inventory = Linked List (Dynamic Pointers)</h4>
+                    <p>Simultaneously, collected products are chained in a Singly Linked List in C with dynamic memory allocation (<code>malloc</code>). You can inspect memory addresses and search for products via pointer traversal.</p>
+                </div>
+                <div class="instructions-section">
+                    <h4>👥 3. Billing Counter = Queue (FIFO)</h4>
+                    <p>Customers wait in line following First-In-First-Out. When billing, the cashier serves the customer at the front using C <code>queue_dequeue()</code>, while new customers join at the rear via <code>enqueue()</code>.</p>
+                </div>
+                <div class="instructions-section">
+                    <h4>🎯 4. Lives, Quizzes & Winning</h4>
+                    <p>Answer periodic Data Structures questions to earn score points (+25). Wrong answers cost 1 Life (❤️). Collect at least 4 products, solve the challenges, finish billing, and win the game!</p>
+                </div>
+                <div class="instructions-section">
+                    <h4>🎮 Controls</h4>
+                    <p><strong>Move:</strong> Arrow Keys / W, A, S, D<br>
+                    <strong>Collect / Interact:</strong> E key or Spacebar<br>
+                    <strong>Pop Item:</strong> P key</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DS Quiz Modal -->
+    <div id="quizModal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">❓ Data Structures Challenge</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <span id="quizCategory" class="quiz-category-tag">Stack</span>
+                <div id="quizText" class="quiz-question-text">Question here</div>
+                <div id="quizOptions" class="quiz-options-grid"></div>
+                <div id="quizFeedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linked List Traversal & Search Modal -->
+    <div id="linkedListModal" class="modal-overlay">
+        <div class="modal-dialog" style="max-width: 680px;">
+            <div class="modal-header">
+                <h3 class="modal-title">🔗 Product Inventory (C Linked List Inspector)</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">
+                    This view displays the real-time C memory representation of your collected products chained via <code>struct Node* next</code> pointers.
+                </p>
+                
+                <div class="ll-search-bar">
+                    <input type="text" id="inputSearchLL" class="ll-search-input" placeholder="Search product name (e.g. Milk, Rice)...">
+                    <button id="btnSearchLL" class="ll-search-btn">Traverse & Search</button>
+                </div>
+                <div id="searchResultDisplay" class="ll-search-result"></div>
+
+                <div class="ll-nodes-scroll-row" id="linkedListNodesContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Billing Counter Modal -->
+    <div id="billingModal" class="modal-overlay">
+        <div class="modal-dialog" style="max-width: 640px;">
+            <div class="modal-header">
+                <h3 class="modal-title">🧾 Supermarket Checkout Counter (Queue FIFO)</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="billingModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Winner Modal -->
+    <div id="winnerModal" class="modal-overlay">
+        <div class="modal-dialog" style="text-align: center;">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: #10b981;">🏆 Victory at DS Mart!</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size: 54px; margin-bottom: 8px;">🎉🛒✨</div>
+                <h2 style="font-size: 22px; color: #f8fafc; margin-bottom: 8px;">Master of Data Structures!</h2>
+                <p style="font-size: 14px; color: #94a3b8;">
+                    You successfully utilized <strong>Stack (LIFO)</strong> for your trolley, <strong>Linked List</strong> for pointer inspection, and <strong>Queue (FIFO)</strong> at billing!
+                </p>
+
+                <div id="winnerStats" class="winner-stats-grid"></div>
+
+                <button class="landing-btn" style="width: 100%; margin-top: 14px;" onclick="location.reload();">
+                    Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal-overlay">
+        <div class="modal-dialog" style="text-align: center;">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: #ef4444;">💔 Game Over</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size: 54px; margin-bottom: 8px;">🛒💥</div>
+                <h2 style="font-size: 22px; color: #f8fafc; margin-bottom: 8px;">All Lives Exhausted!</h2>
+                <p style="font-size: 14px; color: #94a3b8; margin-bottom: 20px;">
+                    Don't worry! Review your Stack, Queue, and Linked List principles and try shopping again.
+                </p>
+
+                <button class="landing-btn" style="width: 100%;" onclick="location.reload();">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live C Engine Terminal / Memory Drawer -->
+    <div id="cEngineDrawer" class="c-engine-drawer">
+        <div class="drawer-header">
+            <span class="drawer-title">⚡ C Data Structures Engine Terminal (GCC MinGW Binary Execution)</span>
+            <button class="modal-close-btn" onclick="document.getElementById('cEngineDrawer').classList.remove('open');">&times;</button>
+        </div>
+        <div class="drawer-content" id="cEngineLogContainer">
+            <div class="c-log-line">[C Engine] System boot: sizeof(Product)=144, sizeof(Node)=152, sizeof(QueueNode)=88</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/audio.js"></script>
+    <script src="js/ds-api.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
